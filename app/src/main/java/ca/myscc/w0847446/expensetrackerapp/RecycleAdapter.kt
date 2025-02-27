@@ -22,6 +22,7 @@ class RecycleAdapter(var expenseList: MutableList<ExpenseItem>): RecyclerView.Ad
             amountItem.text = expenseList[position].amount.toString()
             deleteButton.setOnClickListener {
                 expenseList.removeAt(position)
+                notifyDataSetChanged()
             }
         }
     }
