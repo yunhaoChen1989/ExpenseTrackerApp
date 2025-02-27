@@ -1,23 +1,33 @@
 package ca.myscc.w0847446.expensetrackerapp
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Calendar
 import java.util.Date
 
+/**
+ * Expense Tracker App
+ * yunhao chen
+ * 0847446
+ * Feb 26,25
+ */
 class MainActivity : AppCompatActivity() {
     private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
-    private lateinit var date: DatePicker
+    private lateinit var dateInput: EditText
     private lateinit var recycleView: RecyclerView
     private lateinit var submitButton: Button
+    //val datePicker: DatePicker = DatePicker(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,19 +36,53 @@ class MainActivity : AppCompatActivity() {
         recycleView = findViewById(R.id.expenseList)
         nameExpense = findViewById(R.id.expenseName)
         amount = findViewById(R.id.amount)
-        //date = findViewById(R.id.expenseDate)
+        dateInput = findViewById(R.id.expenseDate)
         submitButton = findViewById(R.id.addExpense)
 
+        //create the item list
         var expenseList = mutableListOf(
-            ExpenseItem("item1", 100.0)
+            ExpenseItem("item1", 100.0, "2025-02-26")
         )
+        //create the adapter with the list
         val adapter = RecycleAdapter(expenseList)
-        recycleView.adapter = adapter
-        recycleView.layoutManager = LinearLayoutManager(this)
+        recycleView.adapter = adapter//set the adapter
+        recycleView.layoutManager = LinearLayoutManager(this)//show it in linear layout
 
+        //submit button event
         submitButton.setOnClickListener {
-            expenseList.add(ExpenseItem(nameExpense.text.toString(), amount.text.toString().toDouble()))
-            adapter.notifyDataSetChanged()
+            val name = nameExpense.text.toString().trim()
+            val amt = amount.text.toString().trim()
+            val date = dateInput.text.toString().trim()
+            //validation of all input
+            if(name.isNullOrEmpty() || (amt.isNullOrEmpty() || amt.toDoubleOrNull() == null) || date.isNullOrEmpty()){
+                Toast.makeText(this,"Invalid Input",Toast.LENGTH_SHORT).show()
+            }else{
+                //add item to the list
+
+                expenseList.add(ExpenseItem(name, amt.toDouble(),date))
+                adapter.notifyDataSetChanged()//notify change to the view
+                nameExpense.setText("")
+                amount.setText("")
+                dateInput.setText("")
+            }
+
+        }
+        //user click the date input edit textbox, show the date picker dialog
+        dateInput.setOnClickListener {
+            //get current date
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePicker: DatePickerDialog = DatePickerDialog(this,
+                //use lambda to set date to input box
+                {_, selectedYear, selectedMonth, selectedDay ->
+                    dateInput.setText("$selectedYear-${selectedMonth+1}-$selectedDay")}
+                ,year,month,day//current date
+            )
+            //show the dialog
+            datePicker.show()
         }
     }
 }
