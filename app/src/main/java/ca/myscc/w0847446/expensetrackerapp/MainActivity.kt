@@ -71,15 +71,15 @@ class MainActivity : AppCompatActivity() {
         dateInput.setOnClickListener {
             //get current date
             val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val y = calendar.get(Calendar.YEAR)
+            val m = calendar.get(Calendar.MONTH)
+            val d = calendar.get(Calendar.DAY_OF_MONTH)
 
             val datePicker: DatePickerDialog = DatePickerDialog(this,
                 //use lambda to set date to input box
-                {_, selectedYear, selectedMonth, selectedDay ->
-                    dateInput.setText("$selectedYear-${selectedMonth+1}-$selectedDay")}
-                ,year,month,day//current date
+                {_, y, m, d ->
+                    dateInput.setText("$y-${m+1}-$d")}
+                ,y,m,d//current date
             )
             //show the dialog
             datePicker.show()
