@@ -1,6 +1,8 @@
 package ca.myscc.w0847446.expensetrackerapp
 
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dateInput: EditText
     private lateinit var recycleView: RecyclerView
     private lateinit var submitButton: Button
+    private lateinit var financialTip: Button
     //val datePicker: DatePicker = DatePicker(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         amount = findViewById(R.id.amount)
         dateInput = findViewById(R.id.expenseDate)
         submitButton = findViewById(R.id.addExpense)
+        financialTip = findViewById(R.id.finsTips)
 
         //create the item list
         var expenseList = mutableListOf(
@@ -85,6 +89,14 @@ class MainActivity : AppCompatActivity() {
             )
             //show the dialog
             datePicker.show()
+        }
+
+        //open browser for financial tips
+        financialTip.setOnClickListener {
+            val financialTipsUrl = "https://google.com/"
+            //using action view to open the browser in the system
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(financialTipsUrl))
+            startActivity(intent)
         }
     }
 
