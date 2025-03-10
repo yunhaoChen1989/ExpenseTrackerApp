@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             ExpenseItem("item1", 100.0, "2025-02-26")
         )
         //create the adapter with the list
-        val adapter = RecycleAdapter(expenseList)
+        val adapter = RecycleAdapter(this,expenseList)
         recycleView.adapter = adapter//set the adapter
         recycleView.layoutManager = LinearLayoutManager(this)//show it in linear layout
 

@@ -1,4 +1,6 @@
 package ca.myscc.w0847446.expensetrackerapp
 
-class ExpenseItem(val name: String, val amount: Double, val date: String) {
+import java.io.Serializable
+
+class ExpenseItem(val name: String, val amount: Double, val date: String):Serializable {
 }
