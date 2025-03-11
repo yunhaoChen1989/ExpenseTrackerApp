@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 
 
 /**
@@ -13,6 +14,7 @@ import android.view.ViewGroup
  * create an instance of this fragment.
  */
 class FooterFragment : Fragment() {
+    private lateinit var textView:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -21,11 +23,16 @@ class FooterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_footer, container, false)
+        val view = inflater.inflate(R.layout.fragment_footer, container, false)
+        textView = view.findViewById(R.id.footerTextView)
+        return view
     }
     companion object {
         fun newInstance(): Fragment {
             return FooterFragment()
         }
+    }
+    fun updateTotalExpensesDisplay(totalExpenses: Double) {
+        textView.text = "Total Expenses: $%.2f".format(totalExpenses)
     }
 }

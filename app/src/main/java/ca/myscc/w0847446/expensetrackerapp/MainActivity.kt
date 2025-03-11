@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recycleView: RecyclerView
     private lateinit var submitButton: Button
     private lateinit var financialTip: Button
+    private lateinit var expenseList: MutableList<ExpenseItem>
     //val datePicker: DatePicker = DatePicker(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +43,11 @@ class MainActivity : AppCompatActivity() {
         financialTip = findViewById(R.id.finsTips)
 
         //create the item list
-        var expenseList = mutableListOf(
+        expenseList = mutableListOf(
             ExpenseItem("item1", 100.0, "2025-02-26")
         )
-        //create the adapter with the list
-        val adapter = RecycleAdapter(this,expenseList)
+        //create the adapter with the list, pass activity too, for call update total expense back
+        val adapter = RecycleAdapter(this,this,expenseList)
         recycleView.adapter = adapter//set the adapter
         recycleView.layoutManager = LinearLayoutManager(this)//show it in linear layout
 
@@ -67,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                 amount.setText("")
                 dateInput.setText("")
             }
+            updateTotalExpense()
 
         }
         //user click the date input edit textbox, show the date picker dialog
@@ -95,9 +97,27 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //Add HeaderFragment and FooterFragment dynamically using
+        //FragmentTransaction and FragmentManager.
+        val headerFragment = HeaderFragment.newInstance()
+        val footerFragment = FooterFragment.newInstance()
 
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.headerFragment, headerFragment)
+        transaction.add(R.id.footerFragment, footerFragment)
+        transaction.commit()
+        // Use FragmentTransaction.replace() to load or switch fragments in
+        //MainActivity
+        val transaction2 = supportFragmentManager.beginTransaction()
+        transaction2.replace(R.id.headerFragment, headerFragment)
+        transaction2.addToBackStack(null) // Optional: Add to back stack
+        transaction2.commit()
+        updateTotalExpense()
     }
-
+    fun updateTotalExpense(){
+        val footer = supportFragmentManager.findFragmentById(R.id.footerFragment) as FooterFragment?
+        footer?.updateTotalExpensesDisplay(expenseList.sumOf { it.amount })
+    }
     override fun onStart() {
         super.onStart()
         Log.d("ExpenseTrackerLog","onStart is called")

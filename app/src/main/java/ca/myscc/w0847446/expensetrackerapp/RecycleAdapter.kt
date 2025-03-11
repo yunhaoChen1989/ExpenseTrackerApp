@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class RecycleAdapter(private val context: Context, var expenseList: MutableList<ExpenseItem>): RecyclerView.Adapter<RecycleViewHolder>() {
+class RecycleAdapter(private val activity: MainActivity, private val context: Context, var expenseList: MutableList<ExpenseItem>): RecyclerView.Adapter<RecycleViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.expense_item_view, parent, false)
@@ -25,6 +25,7 @@ class RecycleAdapter(private val context: Context, var expenseList: MutableList<
             deleteButton.setOnClickListener {
                 expenseList.removeAt(position)
                 notifyDataSetChanged()
+                activity.updateTotalExpense()
             }
             showDetail.setOnClickListener {
                 val item = expenseList[position]
