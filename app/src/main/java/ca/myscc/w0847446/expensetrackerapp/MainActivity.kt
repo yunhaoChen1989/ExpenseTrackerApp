@@ -1,6 +1,7 @@
 package ca.myscc.w0847446.expensetrackerapp
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,13 +14,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Calendar
-
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 /**
  * Expense Tracker App
  * yunhao chen
  * 0847446
  * Feb 26,25
  */
+private const val FILE_NAME = "expenseList.txt"
+
 class MainActivity : AppCompatActivity() {
     private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
@@ -113,6 +120,31 @@ class MainActivity : AppCompatActivity() {
         transaction2.addToBackStack(null) // Optional: Add to back stack
         transaction2.commit()
         updateTotalExpense()
+    }
+    private fun saveListToFile(){
+        try{
+            val json = Gson().toJson(expenseList)
+            openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use{ output -> output.write(json.toByteArray())}
+        }catch (e: IOException){
+            Log.d("fileManager", e.message.toString())
+            e.printStackTrace()
+        }
+    }
+    private fun loadListFromFile(): MutableList<ExpenseItem>{
+        val loadedList = mutableListOf<ExpenseItem>()
+        try{
+            val file = File(filesDir, FILE_NAME)
+            if(!file.exists())return loadedList
+            val json = file.readText()
+            val type = object : TypeToken<List<ExpenseItem>>(){}.type
+            val listFromFile: List<ExpenseItem> = Gson().fromJson(json, type)
+            loadedList.addAll(listFromFile)
+        }catch (e: FileNotFoundException){
+            Log.d("FileManager", e.message.toString())
+        } catch (e: IOException){
+            Log.d("FileManager", e.message.toString())
+        }
+        return loadedList
     }
     fun updateTotalExpense(){
         val footer = supportFragmentManager.findFragmentById(R.id.footerFragment) as FooterFragment?
