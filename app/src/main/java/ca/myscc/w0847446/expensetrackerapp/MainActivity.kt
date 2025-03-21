@@ -50,9 +50,12 @@ class MainActivity : AppCompatActivity() {
         financialTip = findViewById(R.id.finsTips)
 
         //create the item list
-        expenseList = mutableListOf(
+ /*       expenseList = mutableListOf(
             ExpenseItem("item1", 100.0, "2025-02-26")
-        )
+        )*/
+        // Load saved tasks from file
+        expenseList=loadListFromFile()
+        updateTotalExpense()
         //create the adapter with the list, pass activity too, for call update total expense back
         val adapter = RecycleAdapter(this,this,expenseList)
         recycleView.adapter = adapter//set the adapter
@@ -74,6 +77,7 @@ class MainActivity : AppCompatActivity() {
                 nameExpense.setText("")
                 amount.setText("")
                 dateInput.setText("")
+                saveListToFile()
             }
             updateTotalExpense()
 
@@ -121,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         transaction2.commit()
         updateTotalExpense()
     }
-    private fun saveListToFile(){
+    fun saveListToFile(){
         try{
             val json = Gson().toJson(expenseList)
             openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use{ output -> output.write(json.toByteArray())}
@@ -130,7 +134,7 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
     }
-    private fun loadListFromFile(): MutableList<ExpenseItem>{
+    fun loadListFromFile(): MutableList<ExpenseItem>{
         val loadedList = mutableListOf<ExpenseItem>()
         try{
             val file = File(filesDir, FILE_NAME)
