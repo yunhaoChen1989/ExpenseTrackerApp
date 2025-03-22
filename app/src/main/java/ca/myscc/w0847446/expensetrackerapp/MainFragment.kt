@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -162,6 +163,15 @@ class MainFragment : Fragment() {
         val footer = childFragmentManager.findFragmentById(R.id.footerFragment) as FooterFragment?
         footer?.updateTotalExpensesDisplay(expenseList.sumOf { it.amount })
     }
+    fun showDetails(position: Int){
+        val item = expenseList[position]
+        val bundle = Bundle().apply {
+            putString("name", item.name)
+            putString("expenseAmount", item.amount.toString())
+            putString("expenseDate", item.date)
+        }
+        findNavController().navigate(R.id.detailFragment, bundle)
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -169,7 +179,7 @@ class MainFragment : Fragment() {
          *
          * @return A new instance of fragment MainFragment.
          */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(): Fragment {
             return MainFragment()

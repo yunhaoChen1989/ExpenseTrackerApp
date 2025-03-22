@@ -30,13 +30,14 @@ class RecycleAdapter(private val activity: MainFragment, private val context: Co
                 activity.saveListToFile(context)
             }
             showDetail.setOnClickListener {
-                val item = expenseList[position]
+                //val item = expenseList[position]
                 // Create intent to start next activity
-                val intent = Intent(context, ExpenseDetailsActivity::class.java)
-                intent.putExtra("DETAIL", item) // add the data
+                //val intent = Intent(context, ExpenseDetailsActivity::class.java)
+                //intent.putExtra("DETAIL", item) // add the data
 
                 // Start next activity
-                context.startActivity(intent)
+                //context.startActivity(intent)
+                activity.showDetails(position)
             }
         }
     }
