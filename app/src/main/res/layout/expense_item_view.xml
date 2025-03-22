@@ -26,8 +26,8 @@
 
     <Button
         android:id="@+id/delete_item"
-        android:layout_width="111dp"
-        android:layout_height="39dp"
+        android:layout_width="105dp"
+        android:layout_height="45dp"
         android:text="Delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,12 +38,12 @@
 
     <Button
         android:id="@+id/showDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="121dp"
+        android:layout_height="42dp"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="1dp"
+        android:text="showDetail"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/amount_item"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="showDetail" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
