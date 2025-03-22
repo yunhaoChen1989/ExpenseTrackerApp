@@ -95,7 +95,7 @@ class MainFragment : Fragment() {
             val m = calendar.get(Calendar.MONTH)
             val d = calendar.get(Calendar.DAY_OF_MONTH)
 
-            val datePicker: DatePickerDialog = DatePickerDialog(this,
+            val datePicker: DatePickerDialog = DatePickerDialog(context,
                 //use lambda to set date to input box
                 {_, y, m, d ->
                     dateInput.setText("$y-${m+1}-$d")}

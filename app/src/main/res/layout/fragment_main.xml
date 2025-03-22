@@ -52,10 +52,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:text="Add Expense"
-        app:layout_constraintBottom_toTopOf="@+id/expenseList"
         app:layout_constraintEnd_toStartOf="@+id/finsTips"
-        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expenseDate" />
 
@@ -70,12 +70,12 @@
 
     <Button
         android:id="@+id/finsTips"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_width="134dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="8dp"
         android:text="FinancialTips"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.741"
+        app:layout_constraintHorizontal_bias="0.74"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expenseDate" />
 

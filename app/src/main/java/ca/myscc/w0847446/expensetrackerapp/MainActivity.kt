@@ -25,16 +25,16 @@ import java.io.IOException
  * 0847446
  * Feb 26,25
  */
-private const val FILE_NAME = "expenseList.txt"
+//private const val FILE_NAME = "expenseList.txt"
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var nameExpense: EditText
+/*    private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
     private lateinit var dateInput: EditText
     private lateinit var recycleView: RecyclerView
     private lateinit var submitButton: Button
     private lateinit var financialTip: Button
-    private lateinit var expenseList: MutableList<ExpenseItem>
+    private lateinit var expenseList: MutableList<ExpenseItem>*/
     //val datePicker: DatePicker = DatePicker(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("ExpenseTrackerLog","onCreate is called")
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        recycleView = findViewById(R.id.expenseList)
+        /*recycleView = findViewById(R.id.expenseList)
         nameExpense = findViewById(R.id.expenseName)
         amount = findViewById(R.id.amount)
         dateInput = findViewById(R.id.expenseDate)
@@ -50,9 +50,9 @@ class MainActivity : AppCompatActivity() {
         financialTip = findViewById(R.id.finsTips)
 
         //create the item list
- /*       expenseList = mutableListOf(
+ *//*       expenseList = mutableListOf(
             ExpenseItem("item1", 100.0, "2025-02-26")
-        )*/
+        )*//*
         // Load saved tasks from file
         expenseList=loadListFromFile()
         updateTotalExpense()
@@ -123,9 +123,9 @@ class MainActivity : AppCompatActivity() {
         transaction2.replace(R.id.headerFragment, headerFragment)
         transaction2.addToBackStack(null) // Optional: Add to back stack
         transaction2.commit()
-        updateTotalExpense()
+        updateTotalExpense()*/
     }
-    fun saveListToFile(){
+    /*fun saveListToFile(){
         try{
             val json = Gson().toJson(expenseList)
             openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use{ output -> output.write(json.toByteArray())}
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
     fun updateTotalExpense(){
         val footer = supportFragmentManager.findFragmentById(R.id.footerFragment) as FooterFragment?
         footer?.updateTotalExpensesDisplay(expenseList.sumOf { it.amount })
-    }
+    }*/
     override fun onStart() {
         super.onStart()
         Log.d("ExpenseTrackerLog","onStart is called")

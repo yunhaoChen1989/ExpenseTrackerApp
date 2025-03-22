@@ -7,106 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/Label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Expense Tracker App"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
-
-    <EditText
-        android:id="@+id/expenseName"
-        android:layout_width="357dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="638dp"
-        android:ems="10"
-        android:hint="Name of expense"
-        android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Label" />
-
-    <EditText
-        android:id="@+id/amount"
-        android:layout_width="127dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginEnd="257dp"
-        android:layout_marginBottom="591dp"
-        android:ems="10"
-        android:hint="Amount"
-        android:inputType="numberDecimal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expenseName" />
-
-    <EditText
-        android:id="@+id/expenseDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="42dp"
-        android:layout_marginBottom="590dp"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/amount"
-        app:layout_constraintTop_toBottomOf="@+id/expenseName" />
-
-    <Button
-        android:id="@+id/addExpense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="124dp"
-        android:layout_marginTop="47dp"
-        android:layout_marginEnd="197dp"
-        android:layout_marginBottom="495dp"
-        android:text="Add Expense"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expenseDate"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/expenseList"
-        android:layout_width="405dp"
-        android:layout_height="363dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addExpense"
-        app:layout_constraintVertical_bias="0.225" />
-
-    <Button
-        android:id="@+id/finsTips"
-        android:layout_width="157dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="163dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="158dp"
-        android:layout_marginBottom="8dp"
-        android:text="FinancialTips"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expenseList"
-        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/headerFragment"
@@ -130,5 +30,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="ca.myscc.w0847446.expensetrackerapp.MainFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/footerFragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerFragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
