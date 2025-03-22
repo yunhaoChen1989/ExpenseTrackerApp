@@ -10,18 +10,20 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/headerFragment"
-
+        android:name="ca.myscc.w0847446.expensetrackerapp.HeaderFragment"
         android:layout_width="400dp"
         android:layout_height="34dp"
         android:layout_marginStart="3dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/footerFragment"
+        android:name="ca.myscc.w0847446.expensetrackerapp.FooterFragment"
         android:layout_width="400dp"
         android:layout_height="31dp"
         android:layout_marginStart="3dp"
@@ -32,15 +34,14 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:id="@+id/fragmentContainerView"
+        android:name="ca.myscc.w0847446.expensetrackerapp.MainFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/footerFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph"
         app:layout_constraintTop_toBottomOf="@+id/headerFragment" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

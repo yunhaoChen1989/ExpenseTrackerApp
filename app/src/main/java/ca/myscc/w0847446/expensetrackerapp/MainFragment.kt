@@ -65,7 +65,7 @@ class MainFragment : Fragment() {
         //create the adapter with the list, pass activity too, for call update total expense back
         val adapter = RecycleAdapter(this,context,expenseList)
         recycleView.adapter = adapter//set the adapter
-        recycleView.layoutManager = LinearLayoutManager(requireContext())//show it in linear layout
+        recycleView.layoutManager = LinearLayoutManager(context)//show it in linear layout
 
         //submit button event
         submitButton.setOnClickListener {
@@ -116,8 +116,8 @@ class MainFragment : Fragment() {
 
         //Add HeaderFragment and FooterFragment dynamically using
         //FragmentTransaction and FragmentManager.
-        val headerFragment = HeaderFragment.newInstance()
-        val footerFragment = FooterFragment.newInstance()
+        //val headerFragment = HeaderFragment.newInstance()
+        //val footerFragment = FooterFragment.newInstance()
 
         /*val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.headerFragment, headerFragment)
@@ -129,7 +129,7 @@ class MainFragment : Fragment() {
         transaction2.replace(R.id.headerFragment, headerFragment)
         transaction2.addToBackStack(null) // Optional: Add to back stack
         transaction2.commit()*/
-        updateTotalExpense()
+        //updateTotalExpense()
 
         // Inflate the layout for this fragment
         return view
@@ -160,8 +160,7 @@ class MainFragment : Fragment() {
         return loadedList
     }
     fun updateTotalExpense(){
-        val footer = childFragmentManager.findFragmentById(R.id.footerFragment) as FooterFragment?
-        footer?.updateTotalExpensesDisplay(expenseList.sumOf { it.amount })
+        (activity as MainActivity).updateTotalExpense(expenseList)
     }
     fun showDetails(position: Int){
         val item = expenseList[position]
