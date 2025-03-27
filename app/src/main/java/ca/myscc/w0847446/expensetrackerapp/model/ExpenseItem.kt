@@ -1,4 +1,4 @@
-package ca.myscc.w0847446.expensetrackerapp.data
+package ca.myscc.w0847446.expensetrackerapp.model
 
 import android.icu.util.Currency
 import java.io.Serializable

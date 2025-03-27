@@ -23,11 +23,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ca.myscc.w0847446.expensetrackerapp.data.ExpenseItem
+import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 
 import ca.myscc.w0847446.expensetrackerapp.activities.MainActivity
 import ca.myscc.w0847446.expensetrackerapp.R
-import ca.myscc.w0847446.expensetrackerapp.data.CurrencyInfo
+import ca.myscc.w0847446.expensetrackerapp.model.CurrencyInfo
 import ca.myscc.w0847446.expensetrackerapp.network.RetrofitInstance
 import ca.myscc.w0847446.expensetrackerapp.views.RecycleAdapter
 import com.google.android.material.snackbar.Snackbar

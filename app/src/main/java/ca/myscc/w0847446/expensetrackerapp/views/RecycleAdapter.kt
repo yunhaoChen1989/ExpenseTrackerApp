@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ca.myscc.w0847446.expensetrackerapp.R
-import ca.myscc.w0847446.expensetrackerapp.data.ExpenseItem
+import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.fragments.MainFragment
 
 class RecycleAdapter(private val activity: MainFragment, private val context: Context, var expenseList: MutableList<ExpenseItem>): RecyclerView.Adapter<RecycleViewHolder>() {

@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import ca.myscc.w0847446.expensetrackerapp.data.ExpenseItem
+import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.R
 
 /**

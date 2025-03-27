@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
-import ca.myscc.w0847446.expensetrackerapp.data.ExpenseItem
+import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.R
 
 
