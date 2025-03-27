@@ -1,11 +1,10 @@
-package ca.myscc.w0847446.expensetrackerapp
+package ca.myscc.w0847446.expensetrackerapp.views
 
-import android.content.Context
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import ca.myscc.w0847446.expensetrackerapp.R
 
 class RecycleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     lateinit var nameItem: TextView

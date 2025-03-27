@@ -1,11 +1,12 @@
-package ca.myscc.w0847446.expensetrackerapp
+package ca.myscc.w0847446.expensetrackerapp.views
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import ca.myscc.w0847446.expensetrackerapp.R
+import ca.myscc.w0847446.expensetrackerapp.data.ExpenseItem
+import ca.myscc.w0847446.expensetrackerapp.fragments.MainFragment
 
 class RecycleAdapter(private val activity: MainFragment, private val context: Context, var expenseList: MutableList<ExpenseItem>): RecyclerView.Adapter<RecycleViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleViewHolder {

@@ -1,10 +1,11 @@
-package ca.myscc.w0847446.expensetrackerapp
+package ca.myscc.w0847446.expensetrackerapp.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import ca.myscc.w0847446.expensetrackerapp.R
 
 
 /**

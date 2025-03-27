@@ -1,4 +1,4 @@
-package ca.myscc.w0847446.expensetrackerapp
+package ca.myscc.w0847446.expensetrackerapp.activities
 
 
 import android.os.Build
@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import ca.myscc.w0847446.expensetrackerapp.data.ExpenseItem
+import ca.myscc.w0847446.expensetrackerapp.R
 
 /**
  * expense detail class activity, to display the detail of expense item

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="ca.myscc.w0847446.expensetrackerapp.MainFragment"
+        android:name="ca.myscc.w0847446.expensetrackerapp.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="ca.myscc.w0847446.expensetrackerapp.DetailFragment"
+        android:name="ca.myscc.w0847446.expensetrackerapp.fragments.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <action
