@@ -67,18 +67,7 @@ class MainFragment : Fragment() {
         submitButton = view.findViewById(R.id.addExpense)
         financialTip = view.findViewById(R.id.finsTips)
         currencySpinner = view.findViewById(R.id.spinner)
-        // Populate currency spinner with all avail currencies
-        val currencies = Currency.getAvailableCurrencies().map { it.currencyCode }.sorted()
-        //set currency list into adapter
-        val adapterSpinner = ArrayAdapter(context, android.R.layout.simple_spinner_item, currencies)
-        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        //show list on spinner
-        currencySpinner.adapter = adapterSpinner
-        //set default as cad
-        val defaultIndex = currencies.indexOfFirst { it.toString() == "CAD" }
-        if (defaultIndex >= 0) {
-            currencySpinner.setSelection(defaultIndex)
-        }
+        fetchCurrencyList()
         //create the item list
         /*       expenseList = mutableListOf(
                    ExpenseItem("item1", 100.0, "2025-02-26")
@@ -157,7 +146,7 @@ class MainFragment : Fragment() {
         //updateTotalExpense()
 
         // Inflate the layout for this fragment
-        fetchCurrencyList()
+
         return view
     }
     fun saveListToFile(context: Context){
@@ -198,8 +187,9 @@ class MainFragment : Fragment() {
         findNavController().navigate(R.id.detailFragment, bundle)
     }
 
-    //Function to fetch motivational quote from API
-    private fun fetchCurrencyList() {
+    //Function to fetch cad list from API
+    private fun fetchCurrencyList(){
+        var currencyList = mutableListOf<Currency>()
         //Coroutine to fetch quote
         lifecycleScope.launch {
             try {
@@ -207,15 +197,34 @@ class MainFragment : Fragment() {
                     RetrofitInstance.api.getCurrencyList()
                 }
 
-                if (currencies.cad !=null) {
-                    Snackbar.make(requireView(),currencies.cad.toString(), Snackbar.LENGTH_LONG).show()
+                if (currencies.cad.isNotEmpty()) {
+                    currencies.cad.forEach {(k,v)->
+                        if(k.length==3)
+                            currencyList.add(Currency.getInstance(k.uppercase()))
+                    }
+
+                    // Populate currency spinner with all avail currencies
+                    //val currencies = Currency.getAvailableCurrencies().map { it.currencyCode }.sorted()
+                    //set currency list into adapter
+                    val adapterSpinner = ArrayAdapter(context, android.R.layout.simple_spinner_item, currencyList)
+                    adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    //show list on spinner
+                    currencySpinner.adapter = adapterSpinner
+                    //set default as cad
+                    val defaultIndex = currencyList.indexOfFirst { it.toString() == "CAD" }
+                    if (defaultIndex >= 0) {
+                        currencySpinner.setSelection(defaultIndex)
+                    }
+
+                    //Snackbar.make(requireView(),currencies.cad.toString(), Snackbar.LENGTH_LONG).show()
                 } else {
-                    Snackbar.make(requireView(), "No quote found", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), "No cad currency found", Snackbar.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Snackbar.make(requireView(), "Error: ${e.message}", Snackbar.LENGTH_SHORT).show()
             }
         }
+
     }
 
     companion object {
