@@ -10,8 +10,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -35,7 +37,7 @@ class MainFragment : Fragment() {
     private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
     private lateinit var dateInput: EditText
-    private lateinit var currencyInput: EditText
+    private lateinit var currencySpinner: Spinner
     private lateinit var recycleView: RecyclerView
     private lateinit var submitButton: Button
     private lateinit var financialTip: Button
@@ -58,7 +60,19 @@ class MainFragment : Fragment() {
         dateInput = view.findViewById(R.id.expenseDate)
         submitButton = view.findViewById(R.id.addExpense)
         financialTip = view.findViewById(R.id.finsTips)
-
+        currencySpinner = view.findViewById(R.id.spinner)
+        // Populate currency spinner with all avail currencies
+        val currencies = Currency.getAvailableCurrencies().map { it.currencyCode }.sorted()
+        //set currency list into adapter
+        val adapterSpinner = ArrayAdapter(context, android.R.layout.simple_spinner_item, currencies)
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        //show list on spinner
+        currencySpinner.adapter = adapterSpinner
+        //set default as cad
+        val defaultIndex = currencies.indexOfFirst { it.toString() == "CAD" }
+        if (defaultIndex >= 0) {
+            currencySpinner.setSelection(defaultIndex)
+        }
         //create the item list
         /*       expenseList = mutableListOf(
                    ExpenseItem("item1", 100.0, "2025-02-26")
@@ -76,14 +90,14 @@ class MainFragment : Fragment() {
             val name = nameExpense.text.toString().trim()
             val amt = amount.text.toString().trim()
             val date = dateInput.text.toString().trim()
-            val currency = currencyInput.text.toString().trim()
+            val currency = Currency.getInstance(currencySpinner.selectedItem.toString())
             //validation of all input
             if(name.isNullOrEmpty() || (amt.isNullOrEmpty() || amt.toDoubleOrNull() == null) || date.isNullOrEmpty()){
                 Toast.makeText(requireContext(), "Invalid Input", Toast.LENGTH_SHORT).show()
             }else{
                 //add item to the list
 
-                expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currency),0.0))
+                expenseList.add(ExpenseItem(name, amt.toDouble(), date, currency,0.0))
                 adapter.notifyDataSetChanged()//notify change to the view
                 nameExpense.setText("")
                 amount.setText("")
