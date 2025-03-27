@@ -1,4 +1,6 @@
 package ca.myscc.w0847446.expensetrackerapp.data
 
-class CurrencyInfo(val cad: Pair<String, Double>) {
+import java.io.Serializable
+
+class CurrencyInfo(val cad: Map<String, Double>): Serializable {
 }

@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,9 +24,14 @@ import ca.myscc.w0847446.expensetrackerapp.data.ExpenseItem
 
 import ca.myscc.w0847446.expensetrackerapp.activities.MainActivity
 import ca.myscc.w0847446.expensetrackerapp.R
+import ca.myscc.w0847446.expensetrackerapp.network.RetrofitInstance
 import ca.myscc.w0847446.expensetrackerapp.views.RecycleAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -151,6 +157,7 @@ class MainFragment : Fragment() {
         //updateTotalExpense()
 
         // Inflate the layout for this fragment
+        fetchCurrencyList()
         return view
     }
     fun saveListToFile(context: Context){
@@ -190,6 +197,27 @@ class MainFragment : Fragment() {
         }
         findNavController().navigate(R.id.detailFragment, bundle)
     }
+
+    //Function to fetch motivational quote from API
+    private fun fetchCurrencyList() {
+        //Coroutine to fetch quote
+        lifecycleScope.launch {
+            try {
+                val currencies = withContext(Dispatchers.IO) {
+                    RetrofitInstance.api.getCurrencyList()
+                }
+
+                if (currencies.cad !=null) {
+                    Snackbar.make(requireView(),currencies.cad.toString(), Snackbar.LENGTH_LONG).show()
+                } else {
+                    Snackbar.make(requireView(), "No quote found", Snackbar.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Snackbar.make(requireView(), "Error: ${e.message}", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
