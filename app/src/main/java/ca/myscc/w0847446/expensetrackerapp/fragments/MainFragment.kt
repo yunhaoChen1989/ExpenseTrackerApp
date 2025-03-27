@@ -10,11 +10,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,6 +27,7 @@ import ca.myscc.w0847446.expensetrackerapp.data.ExpenseItem
 
 import ca.myscc.w0847446.expensetrackerapp.activities.MainActivity
 import ca.myscc.w0847446.expensetrackerapp.R
+import ca.myscc.w0847446.expensetrackerapp.data.CurrencyInfo
 import ca.myscc.w0847446.expensetrackerapp.network.RetrofitInstance
 import ca.myscc.w0847446.expensetrackerapp.views.RecycleAdapter
 import com.google.android.material.snackbar.Snackbar
@@ -44,11 +48,14 @@ class MainFragment : Fragment() {
     private lateinit var amount: EditText
     private lateinit var dateInput: EditText
     private lateinit var currencySpinner: Spinner
+    private lateinit var currencyAssociated: CheckBox
+    private lateinit var convertedCostBox: EditText
     private lateinit var recycleView: RecyclerView
     private lateinit var submitButton: Button
     private lateinit var financialTip: Button
     private lateinit var expenseList: MutableList<ExpenseItem>
     private lateinit var context: Context
+    private lateinit var currencyRate: CurrencyInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +74,8 @@ class MainFragment : Fragment() {
         submitButton = view.findViewById(R.id.addExpense)
         financialTip = view.findViewById(R.id.finsTips)
         currencySpinner = view.findViewById(R.id.spinner)
+        currencyAssociated = view.findViewById(R.id.checkBox)
+        convertedCostBox = view.findViewById(R.id.convertedCostBox)
         fetchCurrencyList()
         //create the item list
         /*       expenseList = mutableListOf(
@@ -127,7 +136,21 @@ class MainFragment : Fragment() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(financialTipsUrl))
             startActivity(intent)
         }
+        //add listener for the spinner
+        currencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Called when an item is selected
+                val selectedItem = parent?.getItemAtPosition(position).toString()
+                updateAssociatedRate(selectedItem)
+            }
 
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+        //when user change the amount, automatically show the currency in CAD
+        amount.addTextChangedListener {
+            updateAssociatedRate(currencySpinner.selectedItem.toString())
+        }
         //Add HeaderFragment and FooterFragment dynamically using
         //FragmentTransaction and FragmentManager.
         //val headerFragment = HeaderFragment.newInstance()
@@ -197,8 +220,9 @@ class MainFragment : Fragment() {
                     RetrofitInstance.api.getCurrencyList()
                 }
 
+                //put all data into currency list with currency object
                 if (currencies.cad.isNotEmpty()) {
-                    currencies.cad.forEach {(k,v)->
+                    currencies.cad.forEach {(k)->
                         if(k.length==3)
                             currencyList.add(Currency.getInstance(k.uppercase()))
                     }
@@ -215,7 +239,9 @@ class MainFragment : Fragment() {
                     if (defaultIndex >= 0) {
                         currencySpinner.setSelection(defaultIndex)
                     }
-
+                    currencyRate = currencies
+                    //update the associated currency
+                    updateAssociatedRate(currencySpinner.selectedItem.toString())
                     //Snackbar.make(requireView(),currencies.cad.toString(), Snackbar.LENGTH_LONG).show()
                 } else {
                     Snackbar.make(requireView(), "No cad currency found", Snackbar.LENGTH_SHORT).show()
@@ -226,7 +252,15 @@ class MainFragment : Fragment() {
         }
 
     }
-
+    private fun updateAssociatedRate(currency: String){
+        if (currencyAssociated?.isChecked == true) {
+            val rate = currencyRate.cad[currency.lowercase()]
+            val amt = if (amount.text.toString()=="") 0.0  else amount.text.toString().toDouble()
+            if (rate != null) {
+                convertedCostBox.setText((rate * amt).toString())
+            }
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
