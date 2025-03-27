@@ -3,6 +3,7 @@ package ca.myscc.w0847446.expensetrackerapp.fragments
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.icu.util.Currency
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -34,6 +35,7 @@ class MainFragment : Fragment() {
     private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
     private lateinit var dateInput: EditText
+    private lateinit var currencyInput: EditText
     private lateinit var recycleView: RecyclerView
     private lateinit var submitButton: Button
     private lateinit var financialTip: Button
@@ -74,13 +76,14 @@ class MainFragment : Fragment() {
             val name = nameExpense.text.toString().trim()
             val amt = amount.text.toString().trim()
             val date = dateInput.text.toString().trim()
+            val currency = currencyInput.text.toString().trim()
             //validation of all input
             if(name.isNullOrEmpty() || (amt.isNullOrEmpty() || amt.toDoubleOrNull() == null) || date.isNullOrEmpty()){
                 Toast.makeText(requireContext(), "Invalid Input", Toast.LENGTH_SHORT).show()
             }else{
                 //add item to the list
 
-                expenseList.add(ExpenseItem(name, amt.toDouble(), date))
+                expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currency),0.0))
                 adapter.notifyDataSetChanged()//notify change to the view
                 nameExpense.setText("")
                 amount.setText("")

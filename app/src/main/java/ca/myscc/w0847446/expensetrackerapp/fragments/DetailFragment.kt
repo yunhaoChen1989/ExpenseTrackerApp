@@ -1,5 +1,6 @@
 package ca.myscc.w0847446.expensetrackerapp.fragments
 
+import android.icu.util.Currency
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -48,9 +49,11 @@ class DetailFragment : Fragment() {
             val name = it.getString("name", "")
             val expenseAmount = it.getString("expenseAmount", "")
             val expenseDate = it.getString("expenseDate", "")
-
+            val currency = it.getString("currency", "CAD") ?: "CAD"
+            val convertedCost = it.getString("convertedCost", "0")
             if (name != null) {
-               item = ExpenseItem(name,expenseAmount.toDouble(), expenseDate)
+               item = ExpenseItem(name,expenseAmount.toDouble(), expenseDate,
+                   Currency.getInstance(currency), convertedCost.toDouble() )
             }
         }
         //get text view and button
