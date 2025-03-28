@@ -27,11 +27,13 @@ import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 
 import ca.myscc.w0847446.expensetrackerapp.activities.MainActivity
 import ca.myscc.w0847446.expensetrackerapp.R
+import ca.myscc.w0847446.expensetrackerapp.adapter.CurrencyAdapter
 import ca.myscc.w0847446.expensetrackerapp.model.CurrencyInfo
 import ca.myscc.w0847446.expensetrackerapp.network.RetrofitInstance
 import ca.myscc.w0847446.expensetrackerapp.views.RecycleAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,14 +96,15 @@ class MainFragment : Fragment() {
             val name = nameExpense.text.toString().trim()
             val amt = amount.text.toString().trim()
             val date = dateInput.text.toString().trim()
-            val currency = Currency.getInstance(currencySpinner.selectedItem.toString())
+            //val currency =
+            val associatedRate = convertedCostBox.text.toString().trim()
             //validation of all input
             if(name.isNullOrEmpty() || (amt.isNullOrEmpty() || amt.toDoubleOrNull() == null) || date.isNullOrEmpty()){
                 Toast.makeText(requireContext(), "Invalid Input", Toast.LENGTH_SHORT).show()
             }else{
                 //add item to the list
 
-                expenseList.add(ExpenseItem(name, amt.toDouble(), date, currency,0.0))
+                expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble()))
                 adapter.notifyDataSetChanged()//notify change to the view
                 nameExpense.setText("")
                 amount.setText("")
@@ -149,7 +152,9 @@ class MainFragment : Fragment() {
         }
         //when user change the amount, automatically show the currency in CAD
         amount.addTextChangedListener {
-            updateAssociatedRate(currencySpinner.selectedItem.toString())
+            if(currencySpinner.selectedItem!=null){
+                updateAssociatedRate(currencySpinner.selectedItem.toString())
+            }
         }
         //Add HeaderFragment and FooterFragment dynamically using
         //FragmentTransaction and FragmentManager.
@@ -174,7 +179,10 @@ class MainFragment : Fragment() {
     }
     fun saveListToFile(context: Context){
         try{
-            val json = Gson().toJson(expenseList)
+            val gson = GsonBuilder()
+                .registerTypeAdapter(Currency::class.java, CurrencyAdapter())
+                .create()
+            val json = gson.toJson(expenseList)
             context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use{ output -> output.write(json.toByteArray())}
         }catch (e: IOException){
             Log.d("fileManager", e.message.toString())
@@ -188,7 +196,10 @@ class MainFragment : Fragment() {
             if(!file.exists())return loadedList
             val json = file.readText()
             val type = object : TypeToken<List<ExpenseItem>>(){}.type
-            val listFromFile: List<ExpenseItem> = Gson().fromJson(json, type)
+            val gson = GsonBuilder()
+                .registerTypeAdapter(Currency::class.java, CurrencyAdapter())
+                .create()
+            val listFromFile: List<ExpenseItem> = gson.fromJson(json, type)
             loadedList.addAll(listFromFile)
         }catch (e: FileNotFoundException){
             Log.d("FileManager", e.message.toString())
@@ -204,8 +215,10 @@ class MainFragment : Fragment() {
         val item = expenseList[position]
         val bundle = Bundle().apply {
             putString("name", item.name)
-            putString("expenseAmount", item.amount.toString())
+            putDouble("expenseAmount", item.amount)
             putString("expenseDate", item.date)
+            putString("currency", item.currency.currencyCode)
+            putDouble("convertedCost", item.convertedCost)
         }
         findNavController().navigate(R.id.detailFragment, bundle)
     }

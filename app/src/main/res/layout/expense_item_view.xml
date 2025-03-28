@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp" >
+    android:layout_height="100dp" >
 
     <TextView
         android:id="@+id/name_item"
-        android:layout_width="77dp"
-        android:layout_height="17dp"
+        android:layout_width="74dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
         android:text="name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,32 +19,51 @@
         android:id="@+id/amount_item"
         android:layout_width="74dp"
         android:layout_height="21dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="44dp"
         android:text="amount"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/name_item"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.202" />
 
     <Button
         android:id="@+id/delete_item"
-        android:layout_width="105dp"
-        android:layout_height="45dp"
+        android:layout_width="120dp"
+        android:layout_height="44dp"
         android:text="Delete"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.285"
-        app:layout_constraintStart_toEndOf="@+id/showDetail"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.545" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/amount_item"
+        app:layout_constraintTop_toBottomOf="@+id/showDetail"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/showDetail"
         android:layout_width="121dp"
-        android:layout_height="42dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="112dp"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="1dp"
         android:text="showDetail"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/amount_item"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.215" />
+
+    <TextView
+        android:id="@+id/associatedAmount"
+        android:layout_width="76dp"
+        android:layout_height="18dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/delete_item"
+        app:layout_constraintHorizontal_bias="0.352"
+        app:layout_constraintStart_toEndOf="@+id/name_item"
+        app:layout_constraintTop_toBottomOf="@+id/amount_item"
+        app:layout_constraintVertical_bias="0.644" />
 </androidx.constraintlayout.widget.ConstraintLayout>

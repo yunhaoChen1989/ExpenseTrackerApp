@@ -1,6 +1,7 @@
 package ca.myscc.w0847446.expensetrackerapp.views
 
 import android.content.Context
+import android.icu.util.Currency
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,8 @@ class RecycleAdapter(private val activity: MainFragment, private val context: Co
         holder.apply {
             nameItem.text = expenseList[position].name
             amountItem.text = expenseList[position].amount.toString()
+            val currency = expenseList[position].currency?:Currency.getInstance("CAD")
+            associatedAmount.text = "${currency?.symbol?:""}${expenseList[position]?.convertedCost?:0.0}"
             deleteButton.setOnClickListener {
                 expenseList.removeAt(position)
                 notifyDataSetChanged()

@@ -55,6 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="Add Expense"
+        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+        app:icon="@android:drawable/ic_input_add"
         app:layout_constraintEnd_toStartOf="@+id/finsTips"
         app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,6 +78,7 @@
         android:layout_width="134dp"
         android:layout_height="46dp"
         android:text="FinancialTips"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.808"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,11 +86,12 @@
 
     <CheckBox
         android:id="@+id/checkBox"
-        android:layout_width="156dp"
-        android:layout_height="42dp"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="186dp"
+        android:layout_height="39dp"
         android:layout_marginTop="12dp"
-        android:text="Cost Associated"
         android:checked="true"
+        android:text="Cost Associated"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expenseDate" />
 

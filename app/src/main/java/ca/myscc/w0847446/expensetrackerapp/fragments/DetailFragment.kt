@@ -23,6 +23,7 @@ class DetailFragment : Fragment() {
     private lateinit var name: TextView
     private lateinit var expenseAmount: TextView
     private lateinit var expenseDate: TextView
+    private lateinit var associatedRate: TextView
     private lateinit var backHome: Button
     private lateinit var item: ExpenseItem
 
@@ -47,26 +48,28 @@ class DetailFragment : Fragment() {
         // Retrieve List data in arguments from bundle
         arguments?.let {
             val name = it.getString("name", "")
-            val expenseAmount = it.getString("expenseAmount", "")
+            val expenseAmount = it.getDouble("expenseAmount", 0.0)
             val expenseDate = it.getString("expenseDate", "")
             val currency = it.getString("currency", "CAD") ?: "CAD"
-            val convertedCost = it.getString("convertedCost", "0")
+            val convertedCost = it.getDouble("convertedCost", 0.0)
             if (name != null) {
-               item = ExpenseItem(name,expenseAmount.toDouble(), expenseDate,
-                   Currency.getInstance(currency), convertedCost.toDouble() )
+               item = ExpenseItem(name,expenseAmount, expenseDate,
+                   Currency.getInstance(currency), convertedCost)
             }
         }
         //get text view and button
         name = view.findViewById(R.id.detailName)
         expenseAmount = view.findViewById(R.id.detailAmount)
         expenseDate = view.findViewById(R.id.detailDate)
+        associatedRate = view.findViewById(R.id.associatedRate)
         backHome = view.findViewById(R.id.backHome)
 
         //show the detail from item passed by main activity
         name.setText("Expense Name: ${item?.name}")
         expenseAmount.setText("Expense Amount: ${item?.amount.toString()}")
         expenseDate.setText("Expense Date: ${item?.date.toString()}")
-
+        val cuy = item.currency
+        associatedRate.text = "Total Cost: ${cuy?.symbol}${item.convertedCost}"
         //go back to home activity
         backHome.setOnClickListener {
 
