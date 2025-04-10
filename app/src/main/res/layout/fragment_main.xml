@@ -51,14 +51,14 @@
 
     <Button
         android:id="@+id/addExpense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+        android:layout_width="142dp"
+        android:layout_height="52dp"
         android:layout_marginStart="16dp"
         android:text="Add Expense"
-        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
         app:icon="@android:drawable/ic_input_add"
         app:layout_constraintEnd_toStartOf="@+id/finsTips"
-        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/convertedCostBox" />
 
@@ -68,27 +68,28 @@
         android:layout_height="313dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/finsTips"
-        app:layout_constraintVertical_bias="0.974" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/finsTips"
-        android:layout_width="134dp"
-        android:layout_height="46dp"
-        android:text="FinancialTips"
         style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="134dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
+        android:text="FinancialTips"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.808"
+        app:layout_constraintHorizontal_bias="0.622"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/convertedCostBox" />
 
     <CheckBox
         android:id="@+id/checkBox"
         style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="186dp"
-        android:layout_height="39dp"
+        android:layout_width="185dp"
+        android:layout_height="54dp"
         android:layout_marginTop="12dp"
         android:checked="true"
         android:text="Cost Associated"
@@ -97,11 +98,12 @@
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="226dp"
-        android:layout_height="41dp"
+        android:layout_width="193dp"
+        android:layout_height="57dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/checkBox"
         app:layout_constraintTop_toBottomOf="@+id/expenseDate" />
 
@@ -115,6 +117,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+    <Button
+        android:id="@+id/notificateButton"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
+        android:layout_width="92dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="8dp"
+        android:text="notificate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/finsTips"
+        app:layout_constraintTop_toBottomOf="@+id/convertedCostBox" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

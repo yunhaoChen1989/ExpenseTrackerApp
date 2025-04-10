@@ -17,6 +17,8 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.core.app.ServiceCompat.stopForeground
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +30,7 @@ import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.activities.MainActivity
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.adapter.CurrencyAdapter
+import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
 import ca.myscc.w0847446.expensetrackerapp.model.CurrencyInfo
 import ca.myscc.w0847446.expensetrackerapp.network.RetrofitInstance
 import ca.myscc.w0847446.expensetrackerapp.views.RecycleAdapter
@@ -58,6 +61,7 @@ class MainFragment : Fragment() {
     private lateinit var expenseList: MutableList<ExpenseItem>
     private lateinit var context: Context
     private lateinit var currencyRate: CurrencyInfo
+    private lateinit var notificate: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +82,7 @@ class MainFragment : Fragment() {
         currencySpinner = view.findViewById(R.id.spinner)
         currencyAssociated = view.findViewById(R.id.checkBox)
         convertedCostBox = view.findViewById(R.id.convertedCostBox)
+        notificate = view.findViewById(R.id.notificateButton)
         fetchCurrencyList()
         //create the item list
         /*       expenseList = mutableListOf(
@@ -149,12 +154,21 @@ class MainFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
+
         }
         //when user change the amount, automatically show the currency in CAD
         amount.addTextChangedListener {
             if(currencySpinner.selectedItem!=null){
                 updateAssociatedRate(currencySpinner.selectedItem.toString())
             }
+        }
+        //start the service manually
+        notificate.setOnClickListener {
+            val intent = Intent(context, ForegroundService::class.java)
+            //stop the service before calling the new one
+            requireContext().stopService(intent)
+            ContextCompat.startForegroundService(context, intent)
+            Snackbar.make(requireView(), "Service starts", Snackbar.LENGTH_SHORT).show()
         }
         //Add HeaderFragment and FooterFragment dynamically using
         //FragmentTransaction and FragmentManager.
