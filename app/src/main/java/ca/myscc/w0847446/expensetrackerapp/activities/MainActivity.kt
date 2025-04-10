@@ -1,6 +1,7 @@
 package ca.myscc.w0847446.expensetrackerapp.activities
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.WeeklyCostWorker
 import ca.myscc.w0847446.expensetrackerapp.fragments.FooterFragment
+import ca.myscc.w0847446.expensetrackerapp.receiver.AirplaneModeReceiver
 import java.util.concurrent.TimeUnit
 
 /**
@@ -28,6 +30,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
+    private var airplaneModeReceiver= AirplaneModeReceiver()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("ExpenseTrackerLog", "onCreate is called")
@@ -45,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         ).build()
         //start the thread
         WorkManager.getInstance(applicationContext).enqueue(periodicWorkRequest)
+        //register the broadcast
+        registerReceiver(
+            airplaneModeReceiver,
+            IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        )
 
     }
     //Helper for notification channel - Easier to put it here as main activity is a certainty
@@ -89,6 +97,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        //unregister the receiver
+        unregisterReceiver(airplaneModeReceiver)
         Log.d("ExpenseTrackerLog","onDestroy is called")
     }
 }

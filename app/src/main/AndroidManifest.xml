@@ -37,6 +37,12 @@
             android:exported="false"
             android:foregroundServiceType="dataSync"
             />
+        <!--receivers-->
+        <receiver android:name=".receiver.AirplaneModeReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.AIRPLANE_MODE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
