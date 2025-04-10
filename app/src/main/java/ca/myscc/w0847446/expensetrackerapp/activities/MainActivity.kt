@@ -9,10 +9,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
+import ca.myscc.w0847446.expensetrackerapp.foregroundService.WeeklyCostWorker
 import ca.myscc.w0847446.expensetrackerapp.fragments.FooterFragment
+import java.util.concurrent.TimeUnit
 
 /**
  * Expense Tracker App
@@ -34,126 +38,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("ExpenseTrackerLog","onCreate is called")
+        Log.d("ExpenseTrackerLog", "onCreate is called")
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         //Request notification channel
         requestNotificationPermission()
-
+        //send the foreground notification of overdue
         val intent = Intent(this, ForegroundService::class.java)
         ContextCompat.startForegroundService(this, intent)
-        /*recycleView = findViewById(R.id.expenseList)
-        nameExpense = findViewById(R.id.expenseName)
-        amount = findViewById(R.id.amount)
-        dateInput = findViewById(R.id.expenseDate)
-        submitButton = findViewById(R.id.addExpense)
-        financialTip = findViewById(R.id.finsTips)
+        //weekly cost worker
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<WeeklyCostWorker>(
+            7, // Repeat interval
+            TimeUnit.DAYS
+        ).build()
+        //start the thread
+        WorkManager.getInstance(applicationContext).enqueue(periodicWorkRequest)
 
-        //create the item list
- *//*       expenseList = mutableListOf(
-            ExpenseItem("item1", 100.0, "2025-02-26")
-        )*//*
-        // Load saved tasks from file
-        expenseList=loadListFromFile()
-        updateTotalExpense()
-        //create the adapter with the list, pass activity too, for call update total expense back
-        val adapter = RecycleAdapter(this,this,expenseList)
-        recycleView.adapter = adapter//set the adapter
-        recycleView.layoutManager = LinearLayoutManager(this)//show it in linear layout
-
-        //submit button event
-        submitButton.setOnClickListener {
-            val name = nameExpense.text.toString().trim()
-            val amt = amount.text.toString().trim()
-            val date = dateInput.text.toString().trim()
-            //validation of all input
-            if(name.isNullOrEmpty() || (amt.isNullOrEmpty() || amt.toDoubleOrNull() == null) || date.isNullOrEmpty()){
-                Toast.makeText(this,"Invalid Input",Toast.LENGTH_SHORT).show()
-            }else{
-                //add item to the list
-
-                expenseList.add(ExpenseItem(name, amt.toDouble(),date))
-                adapter.notifyDataSetChanged()//notify change to the view
-                nameExpense.setText("")
-                amount.setText("")
-                dateInput.setText("")
-                saveListToFile()
-            }
-            updateTotalExpense()
-
-        }
-        //user click the date input edit textbox, show the date picker dialog
-        dateInput.setOnClickListener {
-            //get current date
-            val calendar = Calendar.getInstance()
-            val y = calendar.get(Calendar.YEAR)
-            val m = calendar.get(Calendar.MONTH)
-            val d = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePicker: DatePickerDialog = DatePickerDialog(this,
-                //use lambda to set date to input box
-                {_, y, m, d ->
-                    dateInput.setText("$y-${m+1}-$d")}
-                ,y,m,d//current date
-            )
-            //show the dialog
-            datePicker.show()
-        }
-
-        //open browser for financial tips
-        financialTip.setOnClickListener {
-            val financialTipsUrl = "https://google.com/"
-            //using action view to open the browser in the system
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(financialTipsUrl))
-            startActivity(intent)
-        }
-
-        //Add HeaderFragment and FooterFragment dynamically using
-        //FragmentTransaction and FragmentManager.
-        val headerFragment = HeaderFragment.newInstance()
-        val footerFragment = FooterFragment.newInstance()
-
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.headerFragment, headerFragment)
-        transaction.add(R.id.footerFragment, footerFragment)
-        transaction.commit()
-        // Use FragmentTransaction.replace() to load or switch fragments in
-        //MainActivity
-        val transaction2 = supportFragmentManager.beginTransaction()
-        transaction2.replace(R.id.headerFragment, headerFragment)
-        transaction2.addToBackStack(null) // Optional: Add to back stack
-        transaction2.commit()
-        updateTotalExpense()*/
     }
-    /*fun saveListToFile(){
-        try{
-            val json = Gson().toJson(expenseList)
-            openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use{ output -> output.write(json.toByteArray())}
-        }catch (e: IOException){
-            Log.d("fileManager", e.message.toString())
-            e.printStackTrace()
-        }
-    }
-    fun loadListFromFile(): MutableList<ExpenseItem>{
-        val loadedList = mutableListOf<ExpenseItem>()
-        try{
-            val file = File(filesDir, FILE_NAME)
-            if(!file.exists())return loadedList
-            val json = file.readText()
-            val type = object : TypeToken<List<ExpenseItem>>(){}.type
-            val listFromFile: List<ExpenseItem> = Gson().fromJson(json, type)
-            loadedList.addAll(listFromFile)
-        }catch (e: FileNotFoundException){
-            Log.d("FileManager", e.message.toString())
-        } catch (e: IOException){
-            Log.d("FileManager", e.message.toString())
-        }
-        return loadedList
-    }
-    fun updateTotalExpense(){
-        val footer = supportFragmentManager.findFragmentById(R.id.footerFragment) as FooterFragment?
-        footer?.updateTotalExpensesDisplay(expenseList.sumOf { it.amount })
-    }*/
     //Helper for notification channel - Easier to put it here as main activity is a certainty
     //as mainFragment might not happen
     private fun requestNotificationPermission() {

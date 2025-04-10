@@ -37,7 +37,7 @@ private const val FILE_NAME = "expenseList.txt"
 class ForegroundService: Service() {
 
     private val channelId = "overDueService"
-    private var notiId = 1
+    //private var notiId = 1
     override fun onCreate() {
         super.onCreate()
         //create the channel
@@ -62,8 +62,8 @@ class ForegroundService: Service() {
             .setContentTitle("Over Due Service Running")
             .setContentText("checking for overdue tasks")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-        startForeground(notiId, notification.build())
-        notiId++
+        startForeground(1, notification.build())
+        //notiId++
 
     }
 
@@ -94,8 +94,8 @@ class ForegroundService: Service() {
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             //send notification
-            notificationManager.notify(notiId, notification)
-            notiId++
+            notificationManager.notify(2, notification)
+            //notiId++
 
         }
     }
