@@ -3,5 +3,5 @@ package ca.myscc.w0847446.expensetrackerapp.model
 import android.icu.util.Currency
 import java.io.Serializable
 
-class ExpenseItem(val name: String, val amount: Double, val date: String, val currency: Currency, val convertedCost: Double):Serializable {
+class ExpenseItem(val name: String, val amount: Double, val date: String, val currency: Currency, val convertedCost: Double, val costAssociated: Boolean=false):Serializable {
 }

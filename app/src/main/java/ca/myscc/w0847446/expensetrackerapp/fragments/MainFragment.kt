@@ -101,6 +101,7 @@ class MainFragment : Fragment() {
             val name = nameExpense.text.toString().trim()
             val amt = amount.text.toString().trim()
             val date = dateInput.text.toString().trim()
+            val associated = currencyAssociated.isChecked
             //val currency =
             val associatedRate = convertedCostBox.text.toString().trim()
             //validation of all input
@@ -109,7 +110,7 @@ class MainFragment : Fragment() {
             }else{
                 //add item to the list
 
-                expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble()))
+                expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble(),associated))
                 adapter.notifyDataSetChanged()//notify change to the view
                 nameExpense.setText("")
                 amount.setText("")

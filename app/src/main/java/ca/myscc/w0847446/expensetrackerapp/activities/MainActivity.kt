@@ -27,14 +27,6 @@ import java.util.concurrent.TimeUnit
 //private const val FILE_NAME = "expenseList.txt"
 
 class MainActivity : AppCompatActivity() {
-/*    private lateinit var nameExpense: EditText
-    private lateinit var amount: EditText
-    private lateinit var dateInput: EditText
-    private lateinit var recycleView: RecyclerView
-    private lateinit var submitButton: Button
-    private lateinit var financialTip: Button
-    private lateinit var expenseList: MutableList<ExpenseItem>*/
-    //val datePicker: DatePicker = DatePicker(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

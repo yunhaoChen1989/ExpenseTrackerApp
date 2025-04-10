@@ -27,7 +27,7 @@ class WeeklyCostWorker(
 
     override fun doWork(): Result {
         val expenseList = loadTasksFromFile()
-        val totalCost = expenseList.filter { it.amount>0 }.sumOf { it.amount }
+        val totalCost = expenseList.filter { it.costAssociated }.sumOf { it.amount }
 
         // Show notification as this is the end of the work
         showNotification("Weekly Cost Summary", "Total Task Cost: $totalCost")
