@@ -21,6 +21,8 @@ import androidx.core.app.ServiceCompat.stopForeground
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +35,7 @@ import ca.myscc.w0847446.expensetrackerapp.adapter.CurrencyAdapter
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
 import ca.myscc.w0847446.expensetrackerapp.model.CurrencyInfo
 import ca.myscc.w0847446.expensetrackerapp.network.RetrofitInstance
+import ca.myscc.w0847446.expensetrackerapp.viewModel.BackgroundColor
 import ca.myscc.w0847446.expensetrackerapp.views.RecycleAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -49,6 +52,7 @@ import java.util.Calendar
 private const val FILE_NAME = "expenseList.txt"
 
 class MainFragment : Fragment() {
+    private val backgroundColor: BackgroundColor by activityViewModels()
     private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
     private lateinit var dateInput: EditText
@@ -73,6 +77,7 @@ class MainFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         context= requireContext()
+        //backgroundColor = ViewModelProvider(requireActivity())[BackgroundColor::class.java]
         recycleView = view.findViewById(R.id.expenseList)
         nameExpense = view.findViewById(R.id.expenseName)
         amount = view.findViewById(R.id.amount)
@@ -116,6 +121,8 @@ class MainFragment : Fragment() {
                 amount.setText("")
                 dateInput.setText("")
                 saveListToFile(context)
+                //change background color when user add new data to the list
+                backgroundColor.changeBackground()
             }
             updateTotalExpense()
 

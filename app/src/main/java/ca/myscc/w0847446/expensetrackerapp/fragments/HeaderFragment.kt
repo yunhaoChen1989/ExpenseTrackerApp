@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ca.myscc.w0847446.expensetrackerapp.R
+import ca.myscc.w0847446.expensetrackerapp.viewModel.BackgroundColor
 
 
 /**
@@ -15,14 +16,17 @@ import ca.myscc.w0847446.expensetrackerapp.R
  */
 class HeaderFragment : Fragment() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_header, container, false)
+        val view = inflater.inflate(R.layout.fragment_header, container, false)
+        return view
     }
     companion object {
         fun newInstance(): Fragment {
