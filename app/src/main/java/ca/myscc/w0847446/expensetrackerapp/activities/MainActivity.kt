@@ -18,6 +18,7 @@ import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.WeeklyCostWorker
 import ca.myscc.w0847446.expensetrackerapp.fragments.FooterFragment
 import ca.myscc.w0847446.expensetrackerapp.receiver.AirplaneModeReceiver
+import ca.myscc.w0847446.expensetrackerapp.receiver.BatteryLowReceiver
 import java.util.concurrent.TimeUnit
 
 /**
@@ -31,6 +32,7 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
 
     private var airplaneModeReceiver= AirplaneModeReceiver()
+    private var batteryLowReceiver= BatteryLowReceiver()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("ExpenseTrackerLog", "onCreate is called")
@@ -52,6 +54,10 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(
             airplaneModeReceiver,
             IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        )
+        registerReceiver(
+            batteryLowReceiver,
+            IntentFilter(Intent.ACTION_BATTERY_LOW)
         )
 
     }
@@ -99,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         //unregister the receiver
         unregisterReceiver(airplaneModeReceiver)
+        unregisterReceiver(batteryLowReceiver)
         Log.d("ExpenseTrackerLog","onDestroy is called")
     }
 }
