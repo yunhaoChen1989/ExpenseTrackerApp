@@ -10,10 +10,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.room.Room
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.R
+import ca.myscc.w0847446.expensetrackerapp.database.ExpenseItemDatabase
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.WeeklyCostWorker
 import ca.myscc.w0847446.expensetrackerapp.fragments.FooterFragment
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
     private var airplaneModeReceiver= AirplaneModeReceiver()
     private var batteryLowReceiver= BatteryLowReceiver()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("ExpenseTrackerLog", "onCreate is called")
@@ -78,10 +82,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-/*    fun updateTotalExpense(expenseList: List<ExpenseItem>){
+    fun updateTotalExpense(expenseList: List<ExpenseItem>){
         val footer = supportFragmentManager.findFragmentById(R.id.footerFragment) as FooterFragment?
         footer?.updateTotalExpensesDisplay(expenseList.sumOf { it.amount })
-    }*/
+    }
     override fun onStart() {
         super.onStart()
         Log.d("ExpenseTrackerLog","onStart is called")

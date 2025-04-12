@@ -12,20 +12,26 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.adapter.CurrencyAdapter
+import ca.myscc.w0847446.expensetrackerapp.dao.ExpenseItemDao
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 
-private const val FILE_NAME = "expenseListNew.txt"
+private const val FILE_NAME = "expenseListNew1.txt"
 class WeeklyCostWorker(    
     private val context: Context,
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
-
+    private lateinit var expenseItemDao: ExpenseItemDao
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     override fun doWork(): Result {
+
         val expenseList = loadTasksFromFile()
         val totalCost = expenseList.filter { it.costAssociated }.sumOf { it.amount }
 

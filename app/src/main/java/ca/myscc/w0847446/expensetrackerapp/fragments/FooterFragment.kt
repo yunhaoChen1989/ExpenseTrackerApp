@@ -37,9 +37,9 @@ class FooterFragment : Fragment() {
         backgroundColor.backgroundColor.observe(viewLifecycleOwner) { value ->
             textView.setBackgroundColor(value)
         }
-        expenseListViewModel.expenseList.observe(viewLifecycleOwner){list->
+        /*expenseListViewModel.expenseList.observe(viewLifecycleOwner){list->
             textView.text = "Total Expenses: $%.2f".format(list.sumOf { it.amount })
-        }
+        }*/
         return view
     }
     companion object {
@@ -47,7 +47,7 @@ class FooterFragment : Fragment() {
             return FooterFragment()
         }
     }
-    /*fun updateTotalExpensesDisplay(totalExpenses: Double) {
+    fun updateTotalExpensesDisplay(totalExpenses: Double) {
         textView.text = "Total Expenses: $%.2f".format(totalExpenses)
-    }*/
+    }
 }

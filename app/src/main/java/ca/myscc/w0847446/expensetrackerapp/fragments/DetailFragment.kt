@@ -53,7 +53,7 @@ class DetailFragment : Fragment() {
             val currency = it.getString("currency", "CAD") ?: "CAD"
             val convertedCost = it.getDouble("convertedCost", 0.0)
             if (name != null) {
-               item = ExpenseItem(name,expenseAmount, expenseDate,
+               item = ExpenseItem(0,name,expenseAmount, expenseDate,
                    Currency.getInstance(currency), convertedCost)
             }
         }

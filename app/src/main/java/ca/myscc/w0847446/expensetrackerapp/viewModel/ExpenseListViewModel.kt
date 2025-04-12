@@ -2,6 +2,8 @@ package ca.myscc.w0847446.expensetrackerapp.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.room.Room
+import ca.myscc.w0847446.expensetrackerapp.database.ExpenseItemDatabase
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 
 class ExpenseListViewModel: ViewModel() {
@@ -13,7 +15,7 @@ class ExpenseListViewModel: ViewModel() {
     fun deleteItem(position: Int){
         expenseList.value = expenseList.value?.toMutableList()?.also { it.removeAt(position) }
     }
-    fun addItem(item: ExpenseItem){
+    suspend fun addItem(item: ExpenseItem){
         //expenseList.value?.add(item)
         val updatedList = expenseList.value.orEmpty().toMutableList()
         updatedList.add(item)

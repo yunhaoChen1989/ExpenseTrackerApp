@@ -22,16 +22,20 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 
 import ca.myscc.w0847446.expensetrackerapp.activities.MainActivity
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.adapter.CurrencyAdapter
+import ca.myscc.w0847446.expensetrackerapp.dao.ExpenseItemDao
+import ca.myscc.w0847446.expensetrackerapp.database.ExpenseItemDatabase
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
 import ca.myscc.w0847446.expensetrackerapp.model.CurrencyInfo
 import ca.myscc.w0847446.expensetrackerapp.network.RetrofitInstance
@@ -43,6 +47,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -54,7 +59,9 @@ private const val FILE_NAME = "expenseListNew.txt"
 
 class MainFragment : Fragment() {
     private val backgroundColor: BackgroundColor by activityViewModels()
-    private val expenseListViewModel: ExpenseListViewModel by activityViewModels()
+    //private val expenseListViewModel: ExpenseListViewModel by activityViewModels()
+    private lateinit var db: ExpenseItemDatabase
+    private lateinit var expenseListViewModel: ExpenseItemDao
     private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
     private lateinit var dateInput: EditText
@@ -90,21 +97,28 @@ class MainFragment : Fragment() {
         currencyAssociated = view.findViewById(R.id.checkBox)
         convertedCostBox = view.findViewById(R.id.convertedCostBox)
         notificate = view.findViewById(R.id.notificateButton)
+        //using api fetch currency rate
         fetchCurrencyList()
-        //create the item list
-        /*       expenseList = mutableListOf(
-                   ExpenseItem("item1", 100.0, "2025-02-26")
-               )*/
-        // Load saved tasks from file
-        //expenseList=loadListFromFile(context)
-        expenseListViewModel.loadList(loadListFromFile(context))
-        //updateTotalExpense()
+
         //create the adapter with the list, pass activity too, for call update total expense back
-        val adapter = RecycleAdapter(this, context,expenseListViewModel.getList())
+        val adapter = RecycleAdapter(this, context, mutableListOf())
         recycleView.adapter = adapter//set the adapter
         recycleView.layoutManager = LinearLayoutManager(context)//show it in linear layout
 
-
+        // Observe data
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Initialize Room database
+            db = Room.databaseBuilder(
+                context,
+                ExpenseItemDatabase::class.java,
+                "ExpenseItem" // Name of the database file
+            ).build()
+            expenseListViewModel = db.expenseItemDao
+            expenseListViewModel.getList().collectLatest { list ->
+                adapter.updateList(list)
+                updateTotalExpense(list)
+            }
+        }
         //submit button event
         submitButton.setOnClickListener {
             val name = nameExpense.text.toString().trim()
@@ -117,19 +131,30 @@ class MainFragment : Fragment() {
             if(name.isNullOrEmpty() || (amt.isNullOrEmpty() || amt.toDoubleOrNull() == null) || date.isNullOrEmpty()){
                 Toast.makeText(requireContext(), "Invalid Input", Toast.LENGTH_SHORT).show()
             }else{
-                //add item to the list
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    //add item to the list
+                    //expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble(),associated))
+                    expenseListViewModel.addItem(
+                        ExpenseItem(
+                            0,
+                            name,
+                            amt.toDouble(),
+                            date,
+                            Currency.getInstance(currencySpinner.selectedItem.toString()),
+                            associatedRate.toDouble(),
+                            associated
+                        )
+                    )
+                    //touch main ui method here
+                    withContext(Dispatchers.Main) { // Switch back to main for UI updates
+                        adapter.notifyDataSetChanged()//notify change to the view
+                        //change background color when user add new data to the list
+                        backgroundColor.changeBackground()
+                    }
+                }
 
-                //expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble(),associated))
-                expenseListViewModel.addItem(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble(),associated))
-                adapter.notifyDataSetChanged()//notify change to the view
-                /*nameExpense.setText("")
-                amount.setText("")
-                dateInput.setText("")*/
-                saveListToFile(context)
-                //change background color when user add new data to the list
-                backgroundColor.changeBackground()
             }
-            //updateTotalExpense()
+
 
         }
         //user click the date input edit textbox, show the date picker dialog
@@ -183,31 +208,10 @@ class MainFragment : Fragment() {
             ContextCompat.startForegroundService(context, intent)
             Snackbar.make(requireView(), "Service starts", Snackbar.LENGTH_SHORT).show()
         }
-        //Add HeaderFragment and FooterFragment dynamically using
-        //FragmentTransaction and FragmentManager.
-        //val headerFragment = HeaderFragment.newInstance()
-        //val footerFragment = FooterFragment.newInstance()
 
-        /*val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.headerFragment, headerFragment)
-        transaction.add(R.id.footerFragment, footerFragment)
-        transaction.commit()*/
-        // Use FragmentTransaction.replace() to load or switch fragments in
-        //MainActivity
-        /*val transaction2 = supportFragmentManager.beginTransaction()
-        transaction2.replace(R.id.headerFragment, headerFragment)
-        transaction2.addToBackStack(null) // Optional: Add to back stack
-        transaction2.commit()*/
-        //updateTotalExpense()
-
-        // Inflate the layout for this fragment
-        //keep monitor the list
-        expenseListViewModel.expenseList.observe(viewLifecycleOwner){list->
-            adapter.updateList(list)
-        }
         return view
     }
-    fun saveListToFile(context: Context){
+    /*fun saveListToFile(context: Context){
         try{
             val gson = GsonBuilder()
                 .registerTypeAdapter(Currency::class.java, CurrencyAdapter())
@@ -237,23 +241,38 @@ class MainFragment : Fragment() {
             Log.d("FileManager", e.message.toString())
         }
         return loadedList
-    }
-    /*fun updateTotalExpense(){
-        (activity as MainActivity).updateTotalExpense(expenseList)
     }*/
+    fun updateTotalExpense(list: MutableList<ExpenseItem>){
+        (activity as MainActivity).updateTotalExpense(list)
+    }
     fun deleteItem(position: Int){
-        expenseListViewModel.deleteItem(position)
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            expenseListViewModel.deleteItem(position)
+        }
     }
     fun showDetails(position: Int){
-        val item = expenseListViewModel.getItem(position)?: ExpenseItem("null", 0.0,"2025-4-16", Currency.getInstance("CAD"), 0.0,false)
-        val bundle = Bundle().apply {
-            putString("name", item.name)
-            putDouble("expenseAmount", item.amount)
-            putString("expenseDate", item.date)
-            putString("currency", item.currency.currencyCode)
-            putDouble("convertedCost", item.convertedCost)
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val item = expenseListViewModel.getItem(position) ?: ExpenseItem(
+                0,
+                "null",
+                0.0,
+                "2025-4-16",
+                Currency.getInstance("CAD"),
+                0.0,
+                false
+            )
+            val bundle = Bundle().apply {
+                putString("name", item.name)
+                putDouble("expenseAmount", item.amount)
+                putString("expenseDate", item.date)
+                putString("currency", item.currency.currencyCode)
+                putDouble("convertedCost", item.convertedCost)
+            }
+            //touch main ui method here
+            withContext(Dispatchers.Main) { // Switch back to main for UI updates
+                findNavController().navigate(R.id.detailFragment, bundle)
+            }
         }
-        findNavController().navigate(R.id.detailFragment, bundle)
     }
 
     //Function to fetch cad list from API

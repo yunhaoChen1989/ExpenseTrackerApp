@@ -12,13 +12,23 @@ import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.room.Room
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.adapter.CurrencyAdapter
+import ca.myscc.w0847446.expensetrackerapp.dao.ExpenseItemDao
+import ca.myscc.w0847446.expensetrackerapp.database.ExpenseItemDatabase
 
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -33,19 +43,27 @@ import java.util.Date
  * 0847446
  * Apr 9, 25
  */
-private const val FILE_NAME = "expenseListNew.txt"
+private const val FILE_NAME = "expenseListNew1.txt"
 class ForegroundService: Service() {
-
+    private lateinit var expenseItemDao: ExpenseItemDao
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val channelId = "overDueService"
     //private var notiId = 1
     override fun onCreate() {
         super.onCreate()
+        // Initialize Room database
+        val db = Room.databaseBuilder(
+            this,
+            ExpenseItemDatabase::class.java,
+            "ExpenseItem" // Name of the database file
+        ).build()
+        expenseItemDao = db.expenseItemDao
         //create the channel
         createNotificationChannel()
         //start service
         startService()
         //check overdue and send notification
-        checkOverDue()
+        getWholeList()
     }
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -79,10 +97,17 @@ class ForegroundService: Service() {
         }
     }
 
-    private fun checkOverDue(){
-        val expenseList = loadTasksFromFile()
-        val overdueCount = expenseList.count{compareWithCurrentDate(it.date)}
-        if(overdueCount>0){
+    private fun getWholeList(){
+        serviceScope.launch {
+            expenseItemDao.getList().collectLatest { list->
+                checkOverDue(list)
+            }
+        }
+    }
+    private fun checkOverDue(expenseList: MutableList<ExpenseItem>) {
+        // Example: Insert an item
+        val overdueCount = expenseList.count { compareWithCurrentDate(it.date) }
+        if (overdueCount > 0) {
             //Building what the notif looks like
             val notification = NotificationCompat.Builder(this, channelId)
                 .setContentTitle("Overdue Task Reminder")
@@ -91,7 +116,8 @@ class ForegroundService: Service() {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build()
 
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             //send notification
             notificationManager.notify(2, notification)
@@ -112,7 +138,7 @@ class ForegroundService: Service() {
             return false
         }
     }
-    private fun loadTasksFromFile(): List<ExpenseItem> {
+    /*private fun loadTasksFromFile(): List<ExpenseItem> {
         val loadedList = mutableListOf<ExpenseItem>()
         try{
             val file = File(filesDir, FILE_NAME)
@@ -130,5 +156,5 @@ class ForegroundService: Service() {
             Log.d("FileManager", e.message.toString())
         }
         return loadedList
-    }
+    }*/
 }

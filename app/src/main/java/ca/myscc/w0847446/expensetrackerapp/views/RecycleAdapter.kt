@@ -37,10 +37,11 @@ class RecycleAdapter(private val activity: MainFragment, private val context: Co
             val currency = item.currency
             associatedAmount.text = "${currency?.symbol?:""}${item.convertedCost?:0.0}"
             deleteButton.setOnClickListener {
-                activity.deleteItem(position)
+
+                activity.deleteItem(item.id)
                 //notifyDataSetChanged()
                 //activity.updateTotalExpense()
-                activity.saveListToFile(context)
+                //activity.saveListToFile(context)
             }
             showDetail.setOnClickListener {
                 //val item = expenseList[position]
@@ -50,7 +51,7 @@ class RecycleAdapter(private val activity: MainFragment, private val context: Co
 
                 // Start next activity
                 //context.startActivity(intent)
-                activity.showDetails(position)
+                activity.showDetails(item.id)
             }
         }
     }

@@ -1,6 +1,10 @@
-plugins {
+
+ plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+     id("org.jetbrains.kotlin.android")
+    //alias(libs.plugins.kotlin.android)
+    id("androidx.room") version "2.7.0" apply false
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -59,5 +63,12 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     //Work Manager
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    val room_version = "2.7.0"
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version") // For Flow and Coroutines
+    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
+    // See Add the KSP plugin to your project
+    ksp("androidx.room:room-compiler:$room_version")
 
 }
