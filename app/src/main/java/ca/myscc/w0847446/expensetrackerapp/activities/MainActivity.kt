@@ -78,10 +78,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    fun updateTotalExpense(expenseList: List<ExpenseItem>){
+/*    fun updateTotalExpense(expenseList: List<ExpenseItem>){
         val footer = supportFragmentManager.findFragmentById(R.id.footerFragment) as FooterFragment?
         footer?.updateTotalExpensesDisplay(expenseList.sumOf { it.amount })
-    }
+    }*/
     override fun onStart() {
         super.onStart()
         Log.d("ExpenseTrackerLog","onStart is called")

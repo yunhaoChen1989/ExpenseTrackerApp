@@ -36,6 +36,7 @@ import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
 import ca.myscc.w0847446.expensetrackerapp.model.CurrencyInfo
 import ca.myscc.w0847446.expensetrackerapp.network.RetrofitInstance
 import ca.myscc.w0847446.expensetrackerapp.viewModel.BackgroundColor
+import ca.myscc.w0847446.expensetrackerapp.viewModel.ExpenseListViewModel
 import ca.myscc.w0847446.expensetrackerapp.views.RecycleAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -49,10 +50,11 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.Calendar
 
-private const val FILE_NAME = "expenseList.txt"
+private const val FILE_NAME = "expenseListNew.txt"
 
 class MainFragment : Fragment() {
     private val backgroundColor: BackgroundColor by activityViewModels()
+    private val expenseListViewModel: ExpenseListViewModel by activityViewModels()
     private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
     private lateinit var dateInput: EditText
@@ -62,7 +64,7 @@ class MainFragment : Fragment() {
     private lateinit var recycleView: RecyclerView
     private lateinit var submitButton: Button
     private lateinit var financialTip: Button
-    private lateinit var expenseList: MutableList<ExpenseItem>
+    //private lateinit var expenseList: MutableList<ExpenseItem>
     private lateinit var context: Context
     private lateinit var currencyRate: CurrencyInfo
     private lateinit var notificate: Button
@@ -94,12 +96,14 @@ class MainFragment : Fragment() {
                    ExpenseItem("item1", 100.0, "2025-02-26")
                )*/
         // Load saved tasks from file
-        expenseList=loadListFromFile(context)
-        updateTotalExpense()
+        //expenseList=loadListFromFile(context)
+        expenseListViewModel.loadList(loadListFromFile(context))
+        //updateTotalExpense()
         //create the adapter with the list, pass activity too, for call update total expense back
-        val adapter = RecycleAdapter(this, context, expenseList)
+        val adapter = RecycleAdapter(this, context,expenseListViewModel.getList())
         recycleView.adapter = adapter//set the adapter
         recycleView.layoutManager = LinearLayoutManager(context)//show it in linear layout
+
 
         //submit button event
         submitButton.setOnClickListener {
@@ -115,16 +119,17 @@ class MainFragment : Fragment() {
             }else{
                 //add item to the list
 
-                expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble(),associated))
+                //expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble(),associated))
+                expenseListViewModel.addItem(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble(),associated))
                 adapter.notifyDataSetChanged()//notify change to the view
-                nameExpense.setText("")
+                /*nameExpense.setText("")
                 amount.setText("")
-                dateInput.setText("")
+                dateInput.setText("")*/
                 saveListToFile(context)
                 //change background color when user add new data to the list
                 backgroundColor.changeBackground()
             }
-            updateTotalExpense()
+            //updateTotalExpense()
 
         }
         //user click the date input edit textbox, show the date picker dialog
@@ -196,7 +201,10 @@ class MainFragment : Fragment() {
         //updateTotalExpense()
 
         // Inflate the layout for this fragment
-
+        //keep monitor the list
+        expenseListViewModel.expenseList.observe(viewLifecycleOwner){list->
+            adapter.updateList(list)
+        }
         return view
     }
     fun saveListToFile(context: Context){
@@ -204,7 +212,7 @@ class MainFragment : Fragment() {
             val gson = GsonBuilder()
                 .registerTypeAdapter(Currency::class.java, CurrencyAdapter())
                 .create()
-            val json = gson.toJson(expenseList)
+            val json = gson.toJson(expenseListViewModel.getList())
             context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use{ output -> output.write(json.toByteArray())}
         }catch (e: IOException){
             Log.d("fileManager", e.message.toString())
@@ -230,11 +238,14 @@ class MainFragment : Fragment() {
         }
         return loadedList
     }
-    fun updateTotalExpense(){
+    /*fun updateTotalExpense(){
         (activity as MainActivity).updateTotalExpense(expenseList)
+    }*/
+    fun deleteItem(position: Int){
+        expenseListViewModel.deleteItem(position)
     }
     fun showDetails(position: Int){
-        val item = expenseList[position]
+        val item = expenseListViewModel.getItem(position)?: ExpenseItem("null", 0.0,"2025-4-16", Currency.getInstance("CAD"), 0.0,false)
         val bundle = Bundle().apply {
             putString("name", item.name)
             putDouble("expenseAmount", item.amount)

@@ -19,7 +19,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 
-private const val FILE_NAME = "expenseList.txt"
+private const val FILE_NAME = "expenseListNew.txt"
 class WeeklyCostWorker(    
     private val context: Context,
     workerParams: WorkerParameters

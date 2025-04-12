@@ -4,10 +4,12 @@ import android.content.Context
 import android.icu.util.Currency
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.fragments.MainFragment
+import ca.myscc.w0847446.expensetrackerapp.viewModel.ExpenseListViewModel
 
 class RecycleAdapter(private val activity: MainFragment, private val context: Context, var expenseList: MutableList<ExpenseItem>): RecyclerView.Adapter<RecycleViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleViewHolder {
@@ -17,20 +19,27 @@ class RecycleAdapter(private val activity: MainFragment, private val context: Co
         return RecycleViewHolder(view)
     }
 
+    fun updateList(eList: MutableList<ExpenseItem>){
+        expenseList = eList
+        notifyDataSetChanged()
+    }
     override fun getItemCount(): Int {
         return expenseList.size
     }
 
     override fun onBindViewHolder(holder: RecycleViewHolder, position: Int) {
         holder.apply {
-            nameItem.text = expenseList[position].name
-            amountItem.text = expenseList[position].amount.toString()
-            val currency = expenseList[position].currency?:Currency.getInstance("CAD")
-            associatedAmount.text = "${currency?.symbol?:""}${expenseList[position]?.convertedCost?:0.0}"
+            val item = expenseList[position]
+            //?: ExpenseItem("null", 0.0,"2025-4-16", Currency.getInstance("CAD"), 0.0,false)
+
+            nameItem.text = item.name
+            amountItem.text = item.amount.toString()
+            val currency = item.currency
+            associatedAmount.text = "${currency?.symbol?:""}${item.convertedCost?:0.0}"
             deleteButton.setOnClickListener {
-                expenseList.removeAt(position)
-                notifyDataSetChanged()
-                activity.updateTotalExpense()
+                activity.deleteItem(position)
+                //notifyDataSetChanged()
+                //activity.updateTotalExpense()
                 activity.saveListToFile(context)
             }
             showDetail.setOnClickListener {

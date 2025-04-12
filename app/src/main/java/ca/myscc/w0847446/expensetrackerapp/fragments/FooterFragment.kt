@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.viewModel.BackgroundColor
+import ca.myscc.w0847446.expensetrackerapp.viewModel.ExpenseListViewModel
 
 
 /**
@@ -21,6 +22,7 @@ import ca.myscc.w0847446.expensetrackerapp.viewModel.BackgroundColor
  */
 class FooterFragment : Fragment() {
     private val backgroundColor: BackgroundColor by activityViewModels()
+    private val expenseListViewModel: ExpenseListViewModel by activityViewModels()
     private lateinit var textView:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,9 @@ class FooterFragment : Fragment() {
         backgroundColor.backgroundColor.observe(viewLifecycleOwner) { value ->
             textView.setBackgroundColor(value)
         }
+        expenseListViewModel.expenseList.observe(viewLifecycleOwner){list->
+            textView.text = "Total Expenses: $%.2f".format(list.sumOf { it.amount })
+        }
         return view
     }
     companion object {
@@ -42,7 +47,7 @@ class FooterFragment : Fragment() {
             return FooterFragment()
         }
     }
-    fun updateTotalExpensesDisplay(totalExpenses: Double) {
+    /*fun updateTotalExpensesDisplay(totalExpenses: Double) {
         textView.text = "Total Expenses: $%.2f".format(totalExpenses)
-    }
+    }*/
 }
