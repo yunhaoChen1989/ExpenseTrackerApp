@@ -1,5 +1,6 @@
 package ca.myscc.w0847446.expensetrackerapp.fragments
 
+import android.animation.ObjectAnimator
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -80,6 +81,13 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ObjectAnimator.ofFloat(view, View.ROTATION_X, 0f, 360f).apply{
+            duration = 500
+            start()
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
