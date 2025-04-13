@@ -12,6 +12,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
+
         applicationId = "ca.myscc.w0847446.expensetrackerapp"
         minSdk = 26
         targetSdk = 35
@@ -19,6 +20,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     buildTypes {

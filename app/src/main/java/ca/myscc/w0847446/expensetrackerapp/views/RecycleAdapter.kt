@@ -1,8 +1,11 @@
 package ca.myscc.w0847446.expensetrackerapp.views
 
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.icu.util.Currency
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +55,7 @@ class RecycleAdapter(private val activity: MainFragment, private val context: Co
                 // Start next activity
                 //context.startActivity(intent)
                 activity.showDetails(item.id)
+
             }
         }
     }

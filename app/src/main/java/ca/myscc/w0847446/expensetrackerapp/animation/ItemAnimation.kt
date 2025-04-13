@@ -10,6 +10,7 @@ class ItemAnimation: DefaultItemAnimator() {
     //when user add an item,this method will be called
     override fun animateAdd(holder: RecyclerView.ViewHolder): Boolean {
         holder.itemView.alpha = 0f
+        //set the x position to the edge on the list
         holder.itemView.translationX = holder.itemView.width.toFloat()
 
         val animatorSet = android.animation.AnimatorSet()
