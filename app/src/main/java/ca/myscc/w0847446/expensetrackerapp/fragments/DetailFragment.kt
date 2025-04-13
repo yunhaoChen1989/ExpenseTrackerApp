@@ -27,7 +27,8 @@ class DetailFragment : Fragment() {
     private lateinit var associatedRate: TextView
     private lateinit var backHome: Button
     private lateinit var item: ExpenseItem
-
+    private lateinit var hideShow: Button
+    private var isVisible = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -71,6 +72,7 @@ class DetailFragment : Fragment() {
         expenseDate = view.findViewById(R.id.detailDate)
         associatedRate = view.findViewById(R.id.associatedRate)
         backHome = view.findViewById(R.id.backHome)
+        hideShow = view.findViewById(R.id.hideShow)
 
         //show the detail from item passed by main activity
         name.setText("Expense Name: ${item?.name}")
@@ -88,9 +90,37 @@ class DetailFragment : Fragment() {
             navController.popBackStack()
         }
 
+        hideShow.setOnClickListener {
+
+            //show or hide all components
+            toggleView(name,isVisible)
+            toggleView(expenseAmount,isVisible)
+            toggleView(expenseDate,isVisible)
+            toggleView(associatedRate,isVisible)
+
+            //toggle the visibility
+            isVisible = !isVisible
+        }
         return view
     }
-
+    // a function to show or hide the view
+    fun toggleView(view: View, isVisible: Boolean){
+        if(isVisible) {
+            view.animate()
+                .alpha(0f)
+                .setDuration(1000)
+                .withEndAction {
+                    view.visibility = View.GONE
+                }
+        }else{
+            // Animate show
+            view.alpha = 0f
+            view.visibility = View.VISIBLE
+            view.animate()
+                .alpha(1f)
+                .setDuration(1000)
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
