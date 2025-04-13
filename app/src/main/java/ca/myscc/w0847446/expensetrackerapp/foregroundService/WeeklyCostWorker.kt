@@ -8,17 +8,24 @@ import android.icu.util.Currency
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.room.Room
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.adapter.CurrencyAdapter
 import ca.myscc.w0847446.expensetrackerapp.dao.ExpenseItemDao
+import ca.myscc.w0847446.expensetrackerapp.database.ExpenseItemDatabase
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -28,17 +35,27 @@ class WeeklyCostWorker(
     private val context: Context,
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
-    private lateinit var expenseItemDao: ExpenseItemDao
-    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    override fun doWork(): Result {
+    override  fun doWork(): Result {
+        val db = Room.databaseBuilder(
+            context,
+            ExpenseItemDatabase::class.java,
+            "ExpenseItem" // Name of the database file
+        ).build()
+        val expenseItemDao = db.expenseItemDao
+        // Use CoroutineScope to collect Flow
+        val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope.launch {
+            //get the newest list
+           expenseItemDao.getList().collectLatest { expenseList->
+               //calculate the total
+                val totalCost = expenseList.filter { it.amount>0}.sumOf { it.amount }
+                // Show notification as this is the end of the work
+                showNotification("Weekly Cost Summary", "Total Task Cost: $totalCost")
+            } // One-time fetch
 
-        val expenseList = loadTasksFromFile()
-        val totalCost = expenseList.filter { it.costAssociated }.sumOf { it.amount }
+        }
 
-        // Show notification as this is the end of the work
-        showNotification("Weekly Cost Summary", "Total Task Cost: $totalCost")
-        Log.d("CostCalculationWorker", "Total cost is: $totalCost")
-
+        //Log.d("CostCalculationWorker", "Total cost is: $totalCost")
         return Result.success()
     }
 
