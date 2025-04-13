@@ -35,6 +35,7 @@ import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.activities.MainActivity
 import ca.myscc.w0847446.expensetrackerapp.R
 import ca.myscc.w0847446.expensetrackerapp.adapter.CurrencyAdapter
+import ca.myscc.w0847446.expensetrackerapp.animation.ItemAnimation
 import ca.myscc.w0847446.expensetrackerapp.dao.ExpenseItemDao
 import ca.myscc.w0847446.expensetrackerapp.database.ExpenseItemDatabase
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
@@ -112,7 +113,7 @@ class MainFragment : Fragment() {
         val adapter = RecycleAdapter(this, context, mutableListOf())
         recycleView.adapter = adapter//set the adapter
         recycleView.layoutManager = LinearLayoutManager(context)//show it in linear layout
-
+        recycleView.itemAnimator = ItemAnimation()
         // Observe data
         viewLifecycleOwner.lifecycleScope.launch {
             // Initialize Room database
@@ -155,7 +156,8 @@ class MainFragment : Fragment() {
                     )
                     //touch main ui method here
                     withContext(Dispatchers.Main) { // Switch back to main for UI updates
-                        adapter.notifyDataSetChanged()//notify change to the view
+
+                        adapter.notifyItemInserted(adapter.itemCount)//notify change to the view
                         //change background color when user add new data to the list
                         backgroundColor.changeBackground()
                     }

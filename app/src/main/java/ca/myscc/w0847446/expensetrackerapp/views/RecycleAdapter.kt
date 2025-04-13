@@ -21,7 +21,7 @@ class RecycleAdapter(private val activity: MainFragment, private val context: Co
 
     fun updateList(eList: MutableList<ExpenseItem>){
         expenseList = eList
-        notifyDataSetChanged()
+        notifyItemRemoved(expenseList.count())
     }
     override fun getItemCount(): Int {
         return expenseList.size
@@ -37,8 +37,8 @@ class RecycleAdapter(private val activity: MainFragment, private val context: Co
             val currency = item.currency
             associatedAmount.text = "${currency?.symbol?:""}${item.convertedCost?:0.0}"
             deleteButton.setOnClickListener {
-
                 activity.deleteItem(item.id)
+                notifyItemRemoved(position)
                 //notifyDataSetChanged()
                 //activity.updateTotalExpense()
                 //activity.saveListToFile(context)
