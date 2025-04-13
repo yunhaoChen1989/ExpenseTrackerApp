@@ -61,7 +61,7 @@ class MainFragment : Fragment() {
     private val backgroundColor: BackgroundColor by activityViewModels()
     //private val expenseListViewModel: ExpenseListViewModel by activityViewModels()
     private lateinit var db: ExpenseItemDatabase
-    private lateinit var expenseListViewModel: ExpenseItemDao
+    private lateinit var expenseItemDao: ExpenseItemDao
     private lateinit var nameExpense: EditText
     private lateinit var amount: EditText
     private lateinit var dateInput: EditText
@@ -113,8 +113,8 @@ class MainFragment : Fragment() {
                 ExpenseItemDatabase::class.java,
                 "ExpenseItem" // Name of the database file
             ).build()
-            expenseListViewModel = db.expenseItemDao
-            expenseListViewModel.getList().collectLatest { list ->
+            expenseItemDao = db.expenseItemDao
+            expenseItemDao.getList().collectLatest { list ->
                 adapter.updateList(list)
                 updateTotalExpense(list)
             }
@@ -134,7 +134,7 @@ class MainFragment : Fragment() {
                 viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                     //add item to the list
                     //expenseList.add(ExpenseItem(name, amt.toDouble(), date, Currency.getInstance(currencySpinner.selectedItem.toString()),associatedRate.toDouble(),associated))
-                    expenseListViewModel.addItem(
+                    expenseItemDao.addItem(
                         ExpenseItem(
                             0,
                             name,
@@ -247,12 +247,12 @@ class MainFragment : Fragment() {
     }
     fun deleteItem(position: Int){
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            expenseListViewModel.deleteItem(position)
+            expenseItemDao.deleteItem(position)
         }
     }
     fun showDetails(position: Int){
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val item = expenseListViewModel.getItem(position) ?: ExpenseItem(
+            val item = expenseItemDao.getItem(position) ?: ExpenseItem(
                 0,
                 "null",
                 0.0,
