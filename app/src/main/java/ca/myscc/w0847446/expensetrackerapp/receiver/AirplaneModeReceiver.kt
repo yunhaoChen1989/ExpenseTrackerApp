@@ -5,8 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import android.widget.Toast
+import ca.myscc.w0847446.expensetrackerapp.interfaces.ReceiverListener
 
-class AirplaneModeReceiver:BroadcastReceiver() {
+class AirplaneModeReceiver(
+    val listener: ReceiverListener? = null
+):BroadcastReceiver() {
+
     override fun onReceive(context: Context?, intent: Intent?) {
         //check if this broadcast if about airplane mode
         if(intent?.action == Intent.ACTION_AIRPLANE_MODE_CHANGED){
@@ -15,10 +19,13 @@ class AirplaneModeReceiver:BroadcastReceiver() {
                 context?.contentResolver,
                 Settings.Global.AIRPLANE_MODE_ON
             ) != 0
-            val msg = if (isModeOn) {
-                "Airplane Mode Enabled - Sync paused"
+            var msg = ""
+            if (isModeOn) {
+                msg = "Airplane Mode Enabled - Sync paused"
+                listener?.updateUI(true)
             } else {
-                "Airplane Mode Disabled - Sync resumed"
+                msg = "Airplane Mode Disabled - Sync resumed"
+                listener?.updateUI(false)
             }
             //Show a Toast
             Toast.makeText(context, msg, Toast.LENGTH_LONG).show()

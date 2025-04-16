@@ -5,8 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import ca.myscc.w0847446.expensetrackerapp.activities.MainActivity
 
-class BatteryLowReceiver: BroadcastReceiver() {
+class BatteryLowReceiver() : BroadcastReceiver() {
     //override onReceive to receive the action
     override fun onReceive(context: Context?, intent: Intent?) {
         if(intent?.action == Intent.ACTION_BATTERY_LOW){

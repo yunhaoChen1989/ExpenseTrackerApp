@@ -10,15 +10,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.room.Room
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
 import ca.myscc.w0847446.expensetrackerapp.R
-import ca.myscc.w0847446.expensetrackerapp.database.ExpenseItemDatabase
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.ForegroundService
 import ca.myscc.w0847446.expensetrackerapp.foregroundService.WeeklyCostWorker
 import ca.myscc.w0847446.expensetrackerapp.fragments.FooterFragment
+import ca.myscc.w0847446.expensetrackerapp.fragments.HeaderFragment
+import ca.myscc.w0847446.expensetrackerapp.fragments.MainFragment
+import ca.myscc.w0847446.expensetrackerapp.interfaces.ReceiverListener
 import ca.myscc.w0847446.expensetrackerapp.receiver.AirplaneModeReceiver
 import ca.myscc.w0847446.expensetrackerapp.receiver.BatteryLowReceiver
 import java.util.concurrent.TimeUnit
@@ -31,9 +32,9 @@ import java.util.concurrent.TimeUnit
  */
 //private const val FILE_NAME = "expenseList.txt"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ReceiverListener {
 
-    private var airplaneModeReceiver= AirplaneModeReceiver()
+    private var airplaneModeReceiver= AirplaneModeReceiver(this)
     private var batteryLowReceiver= BatteryLowReceiver()
 
 
@@ -111,5 +112,11 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(airplaneModeReceiver)
         unregisterReceiver(batteryLowReceiver)
         Log.d("ExpenseTrackerLog","onDestroy is called")
+    }
+
+    override fun updateUI(value: Boolean) {
+        val main = supportFragmentManager.findFragmentById(R.id.headerFragment) as HeaderFragment?
+        main?.updateAirplaneText(value)
+        Log.d("UI-Update", "Main")
     }
 }
