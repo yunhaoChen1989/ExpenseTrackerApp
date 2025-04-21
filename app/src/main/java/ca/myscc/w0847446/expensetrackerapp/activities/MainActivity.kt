@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import ca.myscc.w0847446.expensetrackerapp.model.ExpenseItem
@@ -117,6 +118,11 @@ class MainActivity : AppCompatActivity(), ReceiverListener {
     override fun updateUI(value: Boolean) {
         val main = supportFragmentManager.findFragmentById(R.id.headerFragment) as HeaderFragment?
         main?.updateAirplaneText(value)
-        Log.d("UI-Update", "Main")
+        val navFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val m = navFragment?.childFragmentManager?.primaryNavigationFragment
+        if (m is MainFragment){
+            m.updateUI()
+        }
+        Log.d("UI-Update", "Main,${m}")
     }
 }

@@ -221,6 +221,11 @@ class MainFragment : Fragment() {
 
         return view
     }
+    fun updateUI(){
+        Log.i("UI-Update", "Works")
+        nameExpense.setText("test")
+
+    }
     /*fun saveListToFile(context: Context){
         try{
             val gson = GsonBuilder()
